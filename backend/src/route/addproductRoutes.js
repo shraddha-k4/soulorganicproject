@@ -1,8 +1,8 @@
 import express from 'express';
 import { addProduct, deleteProduct, getAllProducts, getMyProducts, getSellerSummary, getSingleProduct, updateProduct } from '../controller/productController.js';
 import upload from '../middleware/multerMiddleware.js';
-import { authorizeRoles, verifyToken } from '../middleware/authMiddleware.js';
-// import { authorizeRoles, verifyToken } from '';
+import { authorizeRoles, verifyToken } from '../middleware/AuthMiddleware.js';
+
 
 
 const addproductRouter = express.Router();

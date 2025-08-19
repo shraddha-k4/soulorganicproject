@@ -1,6 +1,6 @@
 import express from 'express';
 import { forgotPassword, getProfile, login, protectedRoute, signup, updateProfile } from '../controller/AuthController.js';
-import { verifyToken } from '../middleware/authMiddleware.js';
+import { verifyToken } from '../middleware/AuthMiddleware.js';
 import upload from '../middleware/multerMiddleware.js';
 
 
