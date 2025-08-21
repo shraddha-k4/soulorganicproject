@@ -24,7 +24,7 @@ const SellerProfile = () => {
           <img
             src={seller}
             alt="seller"
-            className="absolute inset-0 sm:w-40 md:w-190 md:h-100 md:object-contain lg:w-full h-full object-cover z-0"
+            className="absolute inset-0 sm:w-40 md:w-190 md:h-100 md:object-contain lg:w-full lg:h-full lg:object-cover z-0"
           />
 
           {/* Gradient Text Overlay */}

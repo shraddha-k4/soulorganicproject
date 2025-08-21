@@ -127,7 +127,7 @@ const SellerDashboard = () => {
             variants={fadeInUp}
             transition={{ delay: 0.6 }}
           >
-            <h3 className="text-green-700 font-semibold mb-4 text-2xl">Recent Orders (Today)</h3>
+            <h3 className="text-green-700 font-semibold mb-4 text-2xl">Orders</h3>
 
             {loadingOrders ? (
               <p className="text-gray-500">Loading orders...</p>
