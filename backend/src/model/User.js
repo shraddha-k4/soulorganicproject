@@ -36,6 +36,7 @@ const userSchema = new mongoose.Schema({
   image: {
     type: String, // इथे Cloudinary URL save होईल
   },
+  
 }, { timestamps: true });
 
 export const User = mongoose.model("User", userSchema);

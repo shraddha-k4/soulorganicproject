@@ -61,13 +61,13 @@ const SellerDashboard = () => {
   const cancelledOrders = allItems.filter((item) => item.status === "Cancelled");
 
   return (
-    <div className="flex min-h-screen bg-white">
+    <div className="flex min-h-screen  bg-white">
       <div className="hidden md:block">
         <SellerSidebar />
       </div>
 
       {/* Main */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-w-[600px] sm:min-w-[700px] lg:min-w-[900px]">
         <motion.div
           className="p-4 md:p-6 flex-1 overflow-y-auto pb-24 md:pb-4"
           initial="hidden"
@@ -91,7 +91,7 @@ const SellerDashboard = () => {
           </motion.div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 sm:gap-3 lg:gap-6 mb-10">
             {[
               { label: "Total Products", value: summary.totalProducts },
               { label: "Total Orders", value: summary.totalOrders },
@@ -109,8 +109,8 @@ const SellerDashboard = () => {
                 transition={{ delay: 0.2 + idx * 0.1 }}
               >
                 <div className="rounded-2xl shadow-md hover:shadow-[inset_0_0_20px_rgba(34,197,94,0.8)] p-4 transition-transform duration-300 transform hover:-translate-y-1">
-                  <h2 className="text-sm text-gray-500 mb-2">{item.label}</h2>
-                  <p className={`text-2xl md:text-3xl font-semibold ${item.textColor || ""}`}>
+                  <h2 className="text-lg md:text-lg lg:text-sm text-gray-500 mb-2">{item.label}</h2>
+                  <p className={`text-2xl md:text-3xl lg:text-3xl font-semibold ${item.textColor || ""}`}>
                     {item.value}
                   </p>
                 </div>
@@ -121,7 +121,7 @@ const SellerDashboard = () => {
           {/* ✅ Order Trend component फक्त */}
           <OrderTrend />
 
-          {/* Recent Orders */}
+
           <motion.div
             className="bg-white rounded-2xl shadow-md p-6"
             variants={fadeInUp}
@@ -131,23 +131,18 @@ const SellerDashboard = () => {
 
             {loadingOrders ? (
               <p className="text-gray-500">Loading orders...</p>
-            ) : (() => {
-              const today = new Date().toDateString();
-              const todaysOrders = orders.filter(order =>
-                new Date(order.createdAt).toDateString() === today
-              );
-
-              return orders.length === 0 ? (
-                <p className="text-gray-500">No orders found.</p>
-              ) : (
-                <table className="w-full text-sm">
+            ) : orders.length === 0 ? (
+              <p className="text-gray-500">No orders found.</p>
+            ) : (
+              <div className="overflow-x-auto w-full scrollbar-thin scrollbar-thumb-green-400 scrollbar-track-gray-100">
+                <table className="min-w-[900px] w-full text-lg whitespace-nowrap border-collapse">
                   <thead>
-                    <tr className="text-left border-b border-gray-200 text-gray-600">
-                      <th className="py-2">Order ID</th>
-                      <th className="py-2">Product</th>
-                      <th className="py-2">Quantity</th>
-                      <th className="py-2">Amount</th>
-                      <th className="py-2">Status</th>
+                    <tr className="border-b border-gray-200 text-black">
+                      <th className="py-3 px-4 text-left">Order ID</th>
+                      <th className="py-3 px-4 text-left">Product</th>
+                      <th className="py-3 px-4 text-left">Quantity</th>
+                      <th className="py-3 px-4 text-left">Amount</th>
+                      <th className="py-3 px-4 text-left">Status</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -157,20 +152,20 @@ const SellerDashboard = () => {
                         return (
                           <tr
                             key={`${order._id}-${idx}`}
-                            className="border-b hover:bg-green-100 transition-colors duration-200"
+                            className="hover:bg-green-50 transition-colors duration-200"
                           >
-                            <td className="py-2">{order._id}</td>
-                            <td>{product.name || "Unnamed Product"}</td>
-                            <td>{item.quantity}</td>
-                            <td>₹{item.totalAmount.toFixed(2)}</td>
-                            <td className="py-2">
+                            <td className="py-3 px-4">{order._id}</td>
+                            <td className="px-4">{product.name || "Unnamed Product"}</td>
+                            <td className="px-4">{item.quantity}</td>
+                            <td className="px-4">₹{item.totalAmount.toFixed(2)}</td>
+                            <td className="px-4">
                               <span
                                 className={`px-2 py-1 rounded text-xs font-medium 
-                                  ${item.status.toLowerCase() === "pending" ? "bg-yellow-100 text-yellow-700" : ""}
-                                  ${item.status.toLowerCase() === "processing" ? "bg-blue-100 text-blue-700" : ""}
-                                  ${item.status.toLowerCase() === "shipped" ? "bg-indigo-100 text-indigo-700" : ""}
-                                  ${item.status.toLowerCase() === "delivered" ? "bg-green-100 text-green-700" : ""}
-                                  ${item.status.toLowerCase() === "cancelled" ? "bg-red-100 text-red-700" : ""}`}
+                        ${item.status.toLowerCase() === "pending" ? "bg-yellow-100 text-yellow-700" : ""}
+                        ${item.status.toLowerCase() === "processing" ? "bg-blue-100 text-blue-700" : ""}
+                        ${item.status.toLowerCase() === "shipped" ? "bg-indigo-100 text-indigo-700" : ""}
+                        ${item.status.toLowerCase() === "delivered" ? "bg-green-100 text-green-700" : ""}
+                        ${item.status.toLowerCase() === "cancelled" ? "bg-red-100 text-red-700" : ""}`}
                               >
                                 {item.status}
                               </span>
@@ -181,15 +176,12 @@ const SellerDashboard = () => {
                     )}
                   </tbody>
                 </table>
-              );
-            })()}
+              </div>
+            )}
           </motion.div>
+
         </motion.div>
 
-        {/* Mobile Navbar */}
-        <div className="md:hidden fixed bottom-0 left-0 right-0 z-50">
-          {/* <SellerNavbar /> */}
-        </div>
       </div>
     </div>
   );

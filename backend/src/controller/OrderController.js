@@ -62,6 +62,8 @@ import Product from "../model/Product.js";
 // };
 
 
+
+
 export const createOrder = async (req, res) => {
   try {
     const { productId, quantity } = req.body;
@@ -146,46 +148,101 @@ export const getMyOrders = async (req, res) => {
   }
 };
 
+// export const getSellerOrders = async (req, res) => {
+//   try {
+//     const sellerId = req.user.id;
+
+//     // 🔍 Find all products listed by this seller
+//     const sellerProducts = await Product.find({ seller: sellerId }).select("_id");
+//     const productIds = sellerProducts.map(p => p._id.toString()); // Convert to strings
+
+//     // 🔍 Find all orders that include any of these products
+//     const orders = await Order.find({ "items.productId": { $in: sellerProducts } })
+//       .populate("items.productId", "name price images")
+//       .populate("buyerId", "name email")
+//       .sort({ createdAt: -1 });
+
+//     // 🧹 Filter items in each order to include only seller's products
+//     const filteredOrders = orders.map(order => {
+//       const sellerItems = order.items.filter(item =>
+//         productIds.includes(item.productId._id.toString())
+//       );
+
+//       return {
+//         _id: order._id,
+//         buyer: order.buyerId,
+//         items: sellerItems,
+//         status: order.status,
+//         createdAt: order.createdAt,
+//       };
+//     });
+
+//     // 🧼 Remove orders with no matching items
+//     const finalOrders = filteredOrders.filter(order => order.items.length > 0);
+
+//     res.json(finalOrders);
+//   } catch (error) {
+//     console.error("Seller orders fetch error:", error);
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
 export const getSellerOrders = async (req, res) => {
   try {
     const sellerId = req.user.id;
 
-    // 🔍 Find all products listed by this seller
+    // 1. Seller products शोध (ObjectId ठेव)
     const sellerProducts = await Product.find({ seller: sellerId }).select("_id");
-    const productIds = sellerProducts.map(p => p._id.toString()); // Convert to strings
+    const productIds = sellerProducts.map((p) => p._id); // 👈 ObjectId ठेवायचं
 
-    // 🔍 Find all orders that include any of these products
-    const orders = await Order.find({ "items.productId": { $in: sellerProducts } })
-      .populate("items.productId", "name price images")
+    console.log("👉 Seller Products:", productIds);
+
+    if (productIds.length === 0) {
+      return res.status(200).json({
+        success: true,
+        count: 0,
+        orders: []
+      });
+    }
+
+    // 2. Orders fetch जे seller products contain करतात
+    const orders = await Order.find({ "items.productId": { $in: productIds } })
+      .populate("items.productId", "name price images seller")
       .populate("buyerId", "name email")
       .sort({ createdAt: -1 });
 
-    // 🧹 Filter items in each order to include only seller's products
-    const filteredOrders = orders.map(order => {
-      const sellerItems = order.items.filter(item =>
-        productIds.includes(item.productId._id.toString())
+    console.log("👉 Orders Found:", orders.length);
+
+    // 3. फक्त seller च्या products filter करा
+    const filteredOrders = orders.map((order) => {
+      const sellerItems = order.items.filter((item) =>
+        productIds.some((id) => id.equals(item.productId?._id))
       );
+
+      console.log("👉 Seller Items in Order:", sellerItems);
 
       return {
         _id: order._id,
         buyer: order.buyerId,
         items: sellerItems,
-        status: order.status,
         createdAt: order.createdAt,
       };
     });
 
-    // 🧼 Remove orders with no matching items
-    const finalOrders = filteredOrders.filter(order => order.items.length > 0);
-
-    res.json(finalOrders);
+    res.status(200).json({
+      success: true,
+      count: filteredOrders.length,
+      orders: filteredOrders
+    });
   } catch (error) {
-    console.error("Seller orders fetch error:", error);
-    res.status(500).json({ message: error.message });
+    console.error("❌ Error fetching seller orders:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching seller orders",
+      error: error.message
+    });
   }
 };
-
-
 
 export const updateOrderItemStatus = async (req, res) => {
   try {

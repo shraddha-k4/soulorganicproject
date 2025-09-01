@@ -211,6 +211,8 @@ const CusUser = () => {
                                 />
                             </div>
 
+
+
                             {/* Buttons */}
                             {isEditing ? (
                                 <div className="flex space-x-4">
@@ -237,6 +239,31 @@ const CusUser = () => {
                                     Edit Profile
                                 </button>
                             )}
+
+                            {/* <div >
+                                <button
+                                    className="w-full py-2 px-4 bg-red-600 text-white rounded-md hover:bg-red-700 transition-all duration-300"
+                                    onClick={() => {
+                                        localStorage.removeItem("token");
+                                        window.location.href = "/profile";
+                                    }}
+                                >
+                                    Logout
+                                </button>
+                            </div> */}
+                            {/* Logout Button - Only Mobile View */}
+                            <div className="block md:hidden">
+                                <button
+                                    className="w-full py-2 px-4 bg-red-600 text-white rounded-md hover:bg-red-700 transition-all duration-300"
+                                    onClick={() => {
+                                        localStorage.removeItem("token");
+                                        window.location.href = "/profile";
+                                    }}
+                                >
+                                    Logout
+                                </button>
+                            </div>
+
                         </form>
                     </div>
                 </div>
@@ -251,7 +278,7 @@ const CusUser = () => {
                 </div>
             </div>
 
-       
+
         </>
     );
 };

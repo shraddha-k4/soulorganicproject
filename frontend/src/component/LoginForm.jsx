@@ -16,7 +16,7 @@ const LoginForm = () => {
   const { login, authed, role } = useAuth();
 
   // ✅ Redirect if already logged in
-  useEffect(() => {
+  //useEffect(() => {
     // if (authed) {
     //   if (role === "seller") {
     //     navigate("/seller/profile");
@@ -26,21 +26,33 @@ const LoginForm = () => {
     //     navigate("/");
     //   }
     // }
-    if (authed && role === "seller") {
-      if (window.innerWidth >= 1024) {
-        // Laptop or desktop
-        navigate("/seller/profile/user");
-      } else {
-        // Mobile or tablet
-        navigate("/seller/profile");
-      }
-    } else if (authed && role !== "seller") {
-      navigate("/customer-dashboard");
-    } else {
-      navigate("/profile");
-    }
+  //   if (authed && role === "seller") {
+  //     if (window.innerWidth >= 1024) {
+  //       // Laptop or desktop
+  //       navigate("/seller/profile/user");
+  //     } else {
+  //       // Mobile or tablet
+  //       navigate("/seller/profile");
+  //     }
+  //   } else if (authed && role !== "seller") {
+  //     navigate("/customer-dashboard");
+  //   } else {
+  //     navigate("/profile");
+  //   }
 
-  }, [authed, role, navigate]);
+  // }, [authed, role, navigate]);
+
+useEffect(() => {
+  if (authed && role === "seller") {
+    if (window.innerWidth >= 1024) {
+      navigate("/seller/profile/user");
+    } else {
+      navigate("/seller/profile");
+    }
+  } else if (authed && role === "customer") {
+    navigate("/customer-dashboard");
+  }
+}, [authed, role, navigate]);
 
 
   const handleChange = (e) =>
